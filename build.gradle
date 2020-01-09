@@ -14,11 +14,11 @@ repositories {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:1.14.4"
-    mappings "net.fabricmc:yarn:1.14.4+build.15:v2"
+    minecraft "com.mojang:minecraft:1.15.1"
+    mappings "net.fabricmc:yarn:yarn:1.15.1+build.28:v2"
 
-    modImplementation "net.fabricmc:fabric-loader:0.7.0+build.171"
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.3.3+build.234-1.14") { transitive = true }
+    modImplementation "net.fabricmc:fabric-loader:0.7.3+build.176"
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.4.27+build.286-1.15") { transitive = true }
 }
 
 processResources {
