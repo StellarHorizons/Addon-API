@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.api.internal.fabric;
 
-import com.hrznstudio.galacticraft.api.addon.GCAddonInitializer;
+import com.hrznstudio.galacticraft.api.addon.AddonInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -47,23 +47,19 @@ public class GalacticraftAPIMain implements ModInitializer {
             // Addon detection
             LOGGER.info("[GC-API] Scanning for Addons...");
             long startAddonInitTime = System.currentTimeMillis();
-            List<GCAddonInitializer> addonInitializers = FabricLoader.getInstance().getEntrypoints("gc_addons", com.hrznstudio.galacticraft.api.addon.GCAddonInitializer.class);
+            List<AddonInitializer> addonInitializers = FabricLoader.getInstance().getEntrypoints("gc_addons", AddonInitializer.class);
             LOGGER.info("[GC-API] Addon scan complete, found {} addons.", addonInitializers.size());
-            int addonSuccess = 0;
-            int addonFailure = 0;
-            for (GCAddonInitializer addonInitializer : addonInitializers) {
+            for (AddonInitializer addonInitializer : addonInitializers) {
                 if(FabricLoader.getInstance().getModContainer(addonInitializer.getModId()).isPresent()) {
                     ModContainer container = FabricLoader.getInstance().getModContainer(addonInitializer.getModId()).get();
                     LOGGER.info("[GC-API] Initializing Addon entry point for {} (v{}).", container.getMetadata().getName(), container.getMetadata().getVersion().getFriendlyString());
 
-                    if (addonInitializer.onInitialize()) addonSuccess++;
-                    else addonFailure++;
+                    addonInitializer.onAddonInitialize();
                 } else {
-                    addonFailure++;
-                    LOGGER.warn("[GC-API] Mod not found with ID \"{}\", logged as load failure.", addonInitializer.getModId());
+                    LOGGER.warn("[GC-API] Mod not found with ID \"{}\".", addonInitializer.getModId());
                 }
             }
-            LOGGER.info("[GC-API] Addon initialization complete. Loaded {} successfully and {} failed to load, {} total. (Took {}ms).", addonSuccess, addonFailure, addonSuccess + addonFailure, System.currentTimeMillis()-startAddonInitTime);
+            LOGGER.info("[GC-API] Addon initialization complete. (Took {}ms)", System.currentTimeMillis()-startAddonInitTime);
         } else {
             LOGGER.info("[GC-API] Galacticraft not found, stopping addon initialization.");
             if(FabricLoader.getInstance().isDevelopmentEnvironment()) {
