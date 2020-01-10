@@ -23,12 +23,11 @@
 package com.hrznstudio.galacticraft.api.addon;
 
 
-public interface GCAddonInitializer {
+public interface AddonInitializer {
     /**
      * Initialize Galacticraft Addon.
-     * @return success or failure (true = load success, false = load failure)
      */
-    boolean onInitialize();
+    void onAddonInitialize();
 
     /**
      * The addon's mod id.
