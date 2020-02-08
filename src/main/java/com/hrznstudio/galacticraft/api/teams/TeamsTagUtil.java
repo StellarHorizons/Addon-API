@@ -36,7 +36,7 @@ public class TeamsTagUtil {
                 role.putString("name", r.getValue().name);
                 ListTag perms = new ListTag();
                 for(Permission p : r.getValue().permissions) {
-                    perms.add(new StringTag(p.getIdentifier().toString()));
+                    perms.add(StringTag.of(p.getIdentifier().toString()));
                 }
                 role.put("permissions", perms);
                 roles.put(r.getKey().toString(), role);
@@ -44,7 +44,7 @@ public class TeamsTagUtil {
 
             ListTag invites = new ListTag();
             for(UUID uuid : t.getValue().invites) {
-                invites.add(new StringTag(uuid.toString()));
+                invites.add(StringTag.of(uuid.toString()));
             }
             tTag.put("players", players);
             tTag.put("roles", roles);
