@@ -30,6 +30,11 @@ public interface AddonInitializer {
     void onAddonInitialize();
 
     /**
+     * Initialize things that do not require Galacticraft here.
+     */
+    void onCompatInitialize();
+
+    /**
      * The addon's mod id.
      * @return the addon's mod id
      */

@@ -30,10 +30,9 @@
   "mixins": [
     "gc-api.mixins.json"
   ],
-  "requires": {
+  "depends": {
     "fabricloader": ">=0.7.0",
-    "fabric": "*",
-    "minecraft": "1.15.1"
+    "minecraft": "1.15.2"
   },
   "suggests": {
     "modmenu": "*"
