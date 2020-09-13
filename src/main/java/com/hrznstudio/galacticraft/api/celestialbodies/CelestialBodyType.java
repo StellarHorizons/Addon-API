@@ -25,14 +25,33 @@ package com.hrznstudio.galacticraft.api.celestialbodies;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericInfo;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.dynamic.RegistryElementCodec;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class CelestialBodyType {
+
+    public static final Codec<Supplier<CelestialBodyType>> REGISTRY_CODEC = RegistryElementCodec.of(AddonRegistry.CELESTIAL_BODY_TYPE_KEY, CelestialBodyType.CODEC);
+    public static final Codec<CelestialBodyType> CODEC = RecordCodecBuilder.create(celestialBodyTypeInstance -> celestialBodyTypeInstance
+                .group(
+                        Identifier.CODEC.fieldOf("id").forGetter(i -> i.id),
+                        Codec.STRING.fieldOf("translation_key").forGetter(i -> i.translationKey),
+                        World.CODEC.fieldOf("dimension").forGetter(i -> i.worldKey),
+                        Codec.INT.fieldOf("access_weight").forGetter(i -> i.accessWeight),
+                        CelestialBodyType.REGISTRY_CODEC.optionalFieldOf("parent").forGetter(i -> i.parent == null ? Optional.empty() : Optional.of(() -> i.parent)),
+                        CelestialBodyDisplayInfo.CODEC.fieldOf("display").forGetter(i -> i.displayInfo),
+                        Codec.FLOAT.fieldOf("gravity").forGetter(i -> i.gravity),
+                        AtmosphericInfo.CODEC.fieldOf("atmosphere").forGetter(i -> i.atmosphere)
+    ).apply(celestialBodyTypeInstance, (identifier, s, worldRegistryKey, integer, celestialBodyTypeSupplier, celestialBodyDisplayInfo, aFloat, atmosphericInfo) ->
+                    new CelestialBodyType(identifier, s, worldRegistryKey, integer, celestialBodyTypeSupplier.map(Supplier::get).orElse(null), celestialBodyDisplayInfo, aFloat, atmosphericInfo)));
+
     public static final CelestialBodyType THE_SUN = new CelestialBodyType.Builder(new Identifier("galacticraft-api", "the_sun"))
             .translationKey("ui.galacticraft-api.bodies.the_sun")
             .parent(null)
